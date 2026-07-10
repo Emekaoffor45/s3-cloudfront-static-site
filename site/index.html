@@ -155,13 +155,6 @@
         align-items: flex-start;
         gap: 12px;
       }
-      .hero-eyebrow-rule {
-        flex-shrink: 0;
-        width: 30px;
-        height: 1px;
-        margin-top: 0.6em;
-        background: var(--clay);
-      }
       .hero-eyebrow-text {
         line-height: 1.6;
       }
@@ -254,8 +247,6 @@
         background-size: cover;
         background-position: center;
         opacity: 0;
-        transition: opacity 1.6s ease;
-        animation: drift 14s ease-in-out infinite alternate;
       }
       .photo-slide.active {
         opacity: 1;
@@ -271,14 +262,6 @@
         );
         mix-blend-mode: multiply;
         pointer-events: none;
-      }
-      @keyframes drift {
-        from {
-          transform: scale(1.06) translate(1.5%, -1%);
-        }
-        to {
-          transform: scale(1.12) translate(-1.5%, 1.5%);
-        }
       }
       .photo-slide.ph {
         display: flex;
@@ -755,7 +738,6 @@
       <div class="hero">
         <div class="hero-text">
           <div class="hero-eyebrow">
-            <span class="hero-eyebrow-rule"></span>
             <span class="hero-eyebrow-text"
               >Computer Science · Networking · Quality Assurance · Project
               Management · Cloud &amp; DevOps</span
@@ -788,12 +770,6 @@
         <div class="photo-frame" id="frame">
           <div class="photo-slide ph active" data-src="photo1.jpg">
             <span>photo1.jpg</span>
-          </div>
-          <div class="photo-slide ph" data-src="photo2.jpg">
-            <span>photo2.jpg</span>
-          </div>
-          <div class="photo-slide ph" data-src="photo3.jpg">
-            <span>photo3.jpg</span>
           </div>
           <div class="tone"></div>
           <div class="frame-caption">Agu Richard · Lagos, Nigeria</div>
@@ -1181,23 +1157,15 @@
 
     <script>
       (function () {
-        const slides = Array.from(document.querySelectorAll(".photo-slide"));
-        slides.forEach((s) => {
-          const src = s.getAttribute("data-src");
-          const img = new Image();
-          img.onload = () => {
-            s.classList.remove("ph");
-            s.innerHTML = "";
-            s.style.backgroundImage = "url('" + src + "')";
-          };
-          img.src = src;
-        });
-        let i = 0;
-        setInterval(() => {
-          slides[i].classList.remove("active");
-          i = (i + 1) % slides.length;
-          slides[i].classList.add("active");
-        }, 4200);
+        const slide = document.querySelector(".photo-slide");
+        const src = slide.getAttribute("data-src");
+        const img = new Image();
+        img.onload = () => {
+          slide.classList.remove("ph");
+          slide.innerHTML = "";
+          slide.style.backgroundImage = "url('" + src + "')";
+        };
+        img.src = src;
       })();
       (function () {
         const nav = document.getElementById("nav");
