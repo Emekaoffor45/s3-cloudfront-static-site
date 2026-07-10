@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Decoding DevOps — Build Log</title>
+<meta name="description" content="A running build log of a DevOps learning journey — projects, pipelines, and progress.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0F1417;
+    --surface: #161C21;
+    --surface-2: #1D242A;
+    --line: #262E35;
+    --text: #E7EDF0;
+    --muted: #8A97A0;
+    --amber: #E8A33D;
+    --amber-dim: #6B5427;
+    --green: #4FB286;
+    --green-dim: #274A3E;
+    --queued: #3A434B;
+    --display: 'Space Grotesk', sans-serif;
+    --body: 'Inter', sans-serif;
+    --mono: 'JetBrains Mono', monospace;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--body);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.012) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.012) 1px, transparent 1px);
+    background-size: 48px 48px;
+    z-index: 0;
+  }
+
+  a { color: inherit; }
+
+  .wrap {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 0 28px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ---------- Header ---------- */
+  header {
+    padding: 28px 0 22px;
+    border-bottom: 1px solid var(--line);
+  }
+  .header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--muted);
+    letter-spacing: 0.02em;
+  }
+  .brand .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 0 3px var(--green-dim);
+  }
+  header nav a {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--muted);
+    text-decoration: none;
+    margin-left: 22px;
+    transition: color .15s ease;
+  }
+  header nav a:hover { color: var(--text); }
+
+  /* ---------- Hero ---------- */
+  .hero {
+    padding: 72px 0 56px;
+  }
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 12.5px;
+    color: var(--amber);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .eyebrow::before {
+    content: '';
+    width: 18px; height: 1px;
+    background: var(--amber);
+  }
+  h1 {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: clamp(34px, 5.4vw, 56px);
+    line-height: 1.08;
+    letter-spacing: -0.01em;
+    max-width: 15ch;
+  }
+  h1 em {
+    font-style: normal;
+    color: var(--amber);
+  }
+  .hero-sub {
+    margin-top: 22px;
+    max-width: 56ch;
+    color: var(--muted);
+    font-size: 16.5px;
+  }
+  .hero-meta {
+    margin-top: 34px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 28px;
+    font-family: var(--mono);
+    font-size: 13px;
+  }
+  .hero-meta .stat b {
+    display: block;
+    font-family: var(--display);
+    font-size: 22px;
+    color: var(--text);
+    font-weight: 600;
+  }
+  .hero-meta .stat span { color: var(--muted); }
+
+  /* ---------- Pipeline board ---------- */
+  .board-section { padding: 20px 0 64px; }
+  .board-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 22px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .board-head h2 {
+    font-family: var(--display);
+    font-size: 20px;
+    font-weight: 600;
+  }
+  .board-head .legend {
+    display: flex;
+    gap: 16px;
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: var(--muted);
+  }
+  .legend span { display: flex; align-items: center; gap: 6px; }
+  .legend i { width: 8px; height: 8px; border-radius: 2px; display: inline-block; }
+  .legend .i-done { background: var(--green); }
+  .legend .i-active { background: var(--amber); }
+  .legend .i-queued { background: var(--queued); }
+
+  .pipeline {
+    display: flex;
+    gap: 2px;
+    overflow-x: auto;
+    padding-bottom: 6px;
+    scrollbar-width: thin;
+  }
+  .stage {
+    flex: 1 0 128px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    padding: 16px 14px;
+    position: relative;
+    min-height: 108px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .stage:first-child { border-radius: 8px 0 0 8px; }
+  .stage:last-child { border-radius: 0 8px 8px 0; }
+  .stage::after {
+    content: '';
+    position: absolute;
+    top: 0; left: -1px;
+    width: 3px; height: 100%;
+  }
+  .stage.done::after { background: var(--green); }
+  .stage.active::after { background: var(--amber); }
+  .stage.queued::after { background: var(--queued); }
+
+  .stage.active {
+    background: var(--surface-2);
+    box-shadow: inset 0 0 0 1px rgba(232,163,61,0.25);
+  }
+  .stage-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .stage-name {
+    font-family: var(--body);
+    font-weight: 600;
+    font-size: 13.5px;
+    margin-top: 10px;
+    line-height: 1.3;
+  }
+  .stage-status {
+    margin-top: 12px;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .stage-status .led {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+  }
+  .stage.done .stage-status { color: var(--green); }
+  .stage.done .led { background: var(--green); }
+  .stage.active .stage-status { color: var(--amber); }
+  .stage.active .led {
+    background: var(--amber);
+    animation: pulse 1.8s ease-in-out infinite;
+  }
+  .stage.queued .stage-status { color: var(--muted); }
+  .stage.queued .led { background: var(--queued); }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(232,163,61,0.5); }
+    50% { opacity: 0.6; box-shadow: 0 0 0 4px rgba(232,163,61,0); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .stage.active .led { animation: none; }
+    html { scroll-behavior: auto; }
+  }
+
+  /* ---------- Projects ---------- */
+  .projects-section { padding: 40px 0 72px; }
+  .section-head {
+    margin-bottom: 28px;
+  }
+  .section-head h2 {
+    font-family: var(--display);
+    font-size: 24px;
+    font-weight: 600;
+  }
+  .section-head p {
+    color: var(--muted);
+    margin-top: 8px;
+    font-size: 15px;
+    max-width: 52ch;
+  }
+
+  .project-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+  @media (max-width: 640px) {
+    .project-grid { grid-template-columns: 1fr; }
+    .pipeline { flex-wrap: wrap; }
+    .stage { flex: 1 1 45%; border-radius: 8px !important; }
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 22px;
+    text-decoration: none;
+    display: block;
+    transition: border-color .15s ease, transform .15s ease;
+  }
+  .card.is-live:hover {
+    border-color: var(--amber-dim);
+    transform: translateY(-2px);
+  }
+  .card.is-locked {
+    opacity: 0.55;
+    cursor: default;
+  }
+  .card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .card-tag {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 3px 8px;
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+  .card.is-live .card-tag { background: var(--green-dim); color: var(--green); }
+  .card.is-locked .card-tag { background: rgba(255,255,255,0.05); color: var(--muted); }
+  .card-arrow { font-family: var(--mono); color: var(--muted); font-size: 15px; }
+  .card h3 {
+    font-family: var(--body);
+    font-weight: 600;
+    font-size: 16.5px;
+    margin-top: 14px;
+  }
+  .card p {
+    color: var(--muted);
+    font-size: 13.5px;
+    margin-top: 8px;
+  }
+  .card .stack {
+    margin-top: 14px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: #6E7A82;
+  }
+
+  /* ---------- Footer ---------- */
+  footer {
+    border-top: 1px solid var(--line);
+    padding: 26px 0 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  footer p {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--muted);
+  }
+  footer a {
+    text-decoration: none;
+    color: var(--muted);
+    transition: color .15s ease;
+  }
+  footer a:hover { color: var(--text); }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <div class="header-row">
+      <div class="brand"><span class="dot"></span> devops-journey / build-log</div>
+      <nav>
+        <a href="#pipeline">Pipeline</a>
+        <a href="#projects">Projects</a>
+        <a href="https://github.com/" target="_blank" rel="noopener">GitHub ↗</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="eyebrow">Currently deploying · Cloud &amp; Infrastructure Layer</div>
+    <h1>Learning DevOps in public, <em>one shipped repo</em> at a time.</h1>
+    <p class="hero-sub">
+      This page is the build log for a self-directed DevOps path — AWS, Terraform, CI/CD,
+      Kubernetes, and GitOps — worked through with real projects instead of just course videos.
+      Every stage below turns green when a project behind it is actually deployed and pushed.
+    </p>
+    <div class="hero-meta">
+      <div class="stat"><b>10</b><span>pipeline stages</span></div>
+      <div class="stat"><b>2</b><span>stages shipped</span></div>
+      <div class="stat"><b>S3 · CloudFront</b><span>current build</span></div>
+    </div>
+  </section>
+
+  <section class="board-section" id="pipeline">
+    <div class="board-head">
+      <h2>Course pipeline</h2>
+      <div class="legend">
+        <span><i class="i-done"></i> shipped</span>
+        <span><i class="i-active"></i> in progress</span>
+        <span><i class="i-queued"></i> queued</span>
+      </div>
+    </div>
+
+    <div class="pipeline">
+      <div class="stage done">
+        <div class="stage-num">01</div>
+        <div class="stage-name">Foundation &amp; Linux</div>
+        <div class="stage-status"><span class="led"></span>Shipped</div>
+      </div>
+      <div class="stage done">
+        <div class="stage-num">02</div>
+        <div class="stage-name">AI-Assisted Tooling</div>
+        <div class="stage-status"><span class="led"></span>Shipped</div>
+      </div>
+      <div class="stage active">
+        <div class="stage-num">03</div>
+        <div class="stage-name">Cloud &amp; Infra (AWS)</div>
+        <div class="stage-status"><span class="led"></span>Building</div>
+      </div>
+      <div class="stage queued">
+        <div class="stage-num">04</div>
+        <div class="stage-name">CI/CD &amp; Automation</div>
+        <div class="stage-status"><span class="led"></span>Queued</div>
+      </div>
+      <div class="stage queued">
+        <div class="stage-num">05</div>
+        <div class="stage-name">Python Automation</div>
+        <div class="stage-status"><span class="led"></span>Queued</div>
+      </div>
+      <div class="stage queued">
+        <div class="stage-num">06</div>
+        <div class="stage-name">Infra as Code</div>
+        <div class="stage-status"><span class="led"></span>Queued</div>
+      </div>
+      <div class="stage queued">
+        <div class="stage-num">07</div>
+        <div class="stage-name">Monitoring &amp; Observability</div>
+        <div class="stage-status"><span class="led"></span>Queued</div>
+      </div>
+      <div class="stage queued">
+        <div class="stage-num">08</div>
+        <div class="stage-name">Config Mgmt (Ansible)</div>
+        <div class="stage-status"><span class="led"></span>Queued</div>
+      </div>
+      <div class="stage queued">
+        <div class="stage-num">09</div>
+        <div class="stage-name">Containers &amp; Kubernetes</div>
+        <div class="stage-status"><span class="led"></span>Queued</div>
+      </div>
+      <div class="stage queued">
+        <div class="stage-num">10</div>
+        <div class="stage-name">GitOps (ArgoCD)</div>
+        <div class="stage-status"><span class="led"></span>Queued</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="projects-section" id="projects">
+    <div class="section-head">
+      <h2>Projects</h2>
+      <p>Each one is a real deployment, not a tutorial follow-along. Live cards link to the repo; locked cards are scoped but not started yet.</p>
+    </div>
+
+    <div class="project-grid">
+      <a class="card is-live" href="#" target="_blank" rel="noopener">
+        <div class="card-top">
+          <span class="card-tag">Live</span>
+          <span class="card-arrow">↗</span>
+        </div>
+        <h3>Static site on S3 + CloudFront</h3>
+        <p>This page. Bucket-hosted origin, CloudFront distribution for HTTPS and edge caching, deployed via a GitHub Actions sync on push.</p>
+        <div class="stack">S3 · CloudFront · GitHub Actions</div>
+      </a>
+
+      <a class="card is-locked">
+        <div class="card-top">
+          <span class="card-tag">Scoped</span>
+        </div>
+        <h3>Lift &amp; Shift to AWS</h3>
+        <p>Multi-tier app migrated onto EC2, RDS, and an ELB, with Route53 in front. Next up after finishing the Cloud layer.</p>
+        <div class="stack">EC2 · RDS · ELB · Route53</div>
+      </a>
+
+      <a class="card is-locked">
+        <div class="card-top">
+          <span class="card-tag">Queued</span>
+        </div>
+        <h3>Jenkins + GitHub Actions Pipeline</h3>
+        <p>Build automation with Nexus and SonarQube integration ahead of a deploy stage.</p>
+        <div class="stack">Jenkins · Nexus · SonarQube</div>
+      </a>
+
+      <a class="card is-locked">
+        <div class="card-top">
+          <span class="card-tag">Queued</span>
+        </div>
+        <h3>AWS VPC via Terraform</h3>
+        <p>Modular Terraform with remote state, standing up a VPC from scratch as infrastructure-as-code.</p>
+        <div class="stack">Terraform · Modules · Remote State</div>
+      </a>
+
+      <a class="card is-locked">
+        <div class="card-top">
+          <span class="card-tag">Queued</span>
+        </div>
+        <h3>Observability Stack</h3>
+        <p>Prometheus and Grafana dashboards with Loki logging, wired to alert on the Lift &amp; Shift app.</p>
+        <div class="stack">Prometheus · Grafana · Loki</div>
+      </a>
+
+      <a class="card is-locked">
+        <div class="card-top">
+          <span class="card-tag">Queued</span>
+        </div>
+        <h3>GitOps Delivery Platform</h3>
+        <p>The flagship build: GitHub Actions CI, Helm charts, and ArgoCD closing the loop on Kubernetes.</p>
+        <div class="stack">Helm · Kubernetes · ArgoCD</div>
+      </a>
+    </div>
+  </section>
+
+  <footer>
+    <p>Built while learning. Updated as stages ship.</p>
+    <a href="https://github.com/" target="_blank" rel="noopener">github.com ↗</a>
+  </footer>
+</div>
+
+</body>
+</html>
