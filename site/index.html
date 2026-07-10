@@ -152,14 +152,18 @@
         color: var(--clay);
         margin-bottom: 26px;
         display: flex;
-        align-items: center;
+        align-items: flex-start;
         gap: 12px;
       }
-      .hero-eyebrow::before {
-        content: "";
+      .hero-eyebrow-rule {
+        flex-shrink: 0;
         width: 30px;
         height: 1px;
+        margin-top: 0.6em;
         background: var(--clay);
+      }
+      .hero-eyebrow-text {
+        line-height: 1.6;
       }
       .hero h1 {
         font-family: var(--display);
@@ -751,8 +755,11 @@
       <div class="hero">
         <div class="hero-text">
           <div class="hero-eyebrow">
-            Computer Science · Networking · Quality Assurance · Project
-            Management · Cloud &amp; DevOps
+            <span class="hero-eyebrow-rule"></span>
+            <span class="hero-eyebrow-text"
+              >Computer Science · Networking · Quality Assurance · Project
+              Management · Cloud &amp; DevOps</span
+            >
           </div>
           <h1>
             From networks<br />and systems to<br /><span class="accent"
