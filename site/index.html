@@ -611,6 +611,17 @@
       .exp-meta .exp-co a:hover {
         border-color: currentColor;
       }
+      .exp-body a.inline-link {
+        color: inherit;
+        text-decoration: none;
+        border-bottom: 1px solid rgba(180, 99, 58, 0.4);
+        transition: background-color 0.15s ease, color 0.15s ease;
+        border-radius: 2px;
+      }
+      .exp-body a.inline-link:hover {
+        background-color: rgba(180, 99, 58, 0.18);
+        color: var(--clay);
+      }
       .exp-meta .exp-date {
         font-family: var(--mono);
         font-size: 11px;
@@ -1000,9 +1011,11 @@
                 IT Support, QA Specialist &amp; Project Manager
               </div>
               <p>
-                I worked as an assistant project lead for the Calgary Black
-                Chambers website, which is a platform that fosters Black
-                leadership and mentorship, and Lab2Doctors, a site providing
+                I worked as an assistant project lead for the
+                <a class="inline-link" href="https://calgaryblackchambers.ca/" target="_blank" rel="noopener">Calgary Black
+                Chambers</a> website, which is a platform that fosters Black
+                leadership and mentorship, and
+                <a class="inline-link" href="https://lab2doctors.com/" target="_blank" rel="noopener">Lab2Doctors</a>, a site providing
                 specialized medical laboratory training and resources. I
                 coordinated the team to keep our project milestones on track and
                 meet deadlines. My role included rigorous QA testing across
