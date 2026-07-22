@@ -81,12 +81,17 @@
         line-height: 1.6;
         -webkit-font-smoothing: antialiased;
         overflow-x: hidden;
-        transition: background-color 0.3s ease, color 0.3s ease;
+        transition:
+          background-color 0.3s ease,
+          color 0.3s ease;
       }
       section,
       footer,
       #nav {
-        transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        transition:
+          background-color 0.3s ease,
+          color 0.3s ease,
+          border-color 0.3s ease;
       }
       ::selection {
         background: var(--clay);
@@ -186,7 +191,10 @@
         color: inherit;
         cursor: pointer;
         flex-shrink: 0;
-        transition: border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+        transition:
+          border-color 0.2s ease,
+          color 0.2s ease,
+          transform 0.2s ease;
       }
       .theme-toggle:hover {
         border-color: var(--clay);
@@ -447,7 +455,7 @@
         font-family: var(--mono);
         font-size: 12px;
         color: var(--clay);
-        width: 74px;
+        width: 90px;
         flex-shrink: 0;
       }
       .path-role {
@@ -700,7 +708,9 @@
         color: inherit;
         text-decoration: none;
         border-bottom: 1px solid rgba(180, 99, 58, 0.4);
-        transition: background-color 0.15s ease, color 0.15s ease;
+        transition:
+          background-color 0.15s ease,
+          color 0.15s ease;
         border-radius: 2px;
       }
       a.inline-link:hover {
@@ -892,7 +902,7 @@
             I'm Agu Richard, a Computer Science graduate from Nigeria. I started
             out working with networks and systems, then moved into software and
             QA. These days I'm focused on cloud and DevOps, and I build real
-            projects to learn . Everything I ship goes up on GitHub.
+            projects to learn. Everything I ship goes up on GitHub.
           </p>
           <div class="hero-cta">
             <a class="btn btn-primary" href="#work"
@@ -935,17 +945,33 @@
           <p>
             My first real job was at
             <strong
-              ><a class="inline-link" href="https://www.tizeti.com/" target="_blank" rel="noopener">Tizeti</a></strong
-            >, configuring
-            routers, switches, VPNs and VLANs, and helping deploy a
-            solar-powered base station that brought Wi-Fi to a rural community.
-            After that I built full-stack applications at
+              ><a
+                class="inline-link"
+                href="https://www.tizeti.com/"
+                target="_blank"
+                rel="noopener"
+                >Tizeti</a
+              ></strong
+            >, configuring routers, switches, VPNs and VLANs, and helping deploy
+            a solar-powered base station that brought Wi-Fi to a rural
+            community. After that I built full-stack applications at
             <strong
-              ><a class="inline-link" href="https://www.ourpass.co/" target="_blank" rel="noopener">OurPass Digital Bank</a></strong
-            >, and right now I handle IT
-            support, QA, and project delivery at
+              ><a
+                class="inline-link"
+                href="https://www.ourpass.co/"
+                target="_blank"
+                rel="noopener"
+                >OurPass Digital Bank</a
+              ></strong
+            >, and right now I handle IT support, QA, and project delivery at
             <strong
-              ><a class="inline-link" href="https://ideationplatform.net/" target="_blank" rel="noopener">Ideation Platform</a></strong
+              ><a
+                class="inline-link"
+                href="https://ideationplatform.net/"
+                target="_blank"
+                rel="noopener"
+                >Ideation Platform</a
+              ></strong
             >.
           </p>
           <p>
@@ -1012,36 +1038,68 @@
             </div>
             <div class="proj-arrow">↗</div>
           </a>
-          <div class="proj">
+          <a
+            class="proj live"
+            href="https://github.com/Emekaoffor45/rds-mysql-server-inventory"
+            target="_blank"
+            rel="noopener"
+          >
             <div class="proj-num">02</div>
+            <div class="proj-main">
+              <h3>
+                MySQL database on RDS
+                <span class="proj-tag tag-live">Live</span>
+              </h3>
+              <p>
+                A managed MySQL database on Amazon RDS, locked down with an
+                IP-restricted security group and encrypted at rest. I connected
+                from my own machine, built the schema, and documented the
+                security and cost tradeoffs I made along the way.
+              </p>
+              <div class="proj-stack">
+                RDS · MySQL · VPC security groups · KMS
+              </div>
+            </div>
+            <div class="proj-arrow">↗</div>
+          </a>
+          <a
+            class="proj live"
+            href="https://github.com/Emekaoffor45/link-shortener-flask-ec2-rds"
+            target="_blank"
+            rel="noopener"
+          >
+            <div class="proj-num">03</div>
+            <div class="proj-main">
+              <h3>
+                Link shortener (Flask + EC2 + RDS)
+                <span class="proj-tag tag-live">Live</span>
+              </h3>
+              <p>
+                A URL shortener I built from scratch to tie everything together.
+                A Flask app on an EC2 server takes a long URL, generates a short
+                code, stores it in my RDS database, and redirects on visit. My
+                own project, designed and built end to end.
+              </p>
+              <div class="proj-stack">Python · Flask · EC2 · RDS · PyMySQL</div>
+            </div>
+            <div class="proj-arrow">↗</div>
+          </a>
+          <div class="proj">
+            <div class="proj-num">04</div>
             <div class="proj-main">
               <h3>
                 Monitoring with CloudWatch
                 <span class="proj-tag tag-soon">Next</span>
               </h3>
               <p>
-                Metrics, dashboards, and alarms on this site's infrastructure,
-                so I know when something breaks before a user does.
+                Metrics, dashboards, and alarms on my running infrastructure, so
+                I know when something breaks before a user does.
               </p>
               <div class="proj-stack">CloudWatch · SNS alerts</div>
             </div>
           </div>
           <div class="proj">
-            <div class="proj-num">03</div>
-            <div class="proj-main">
-              <h3>
-                Lift &amp; shift to AWS
-                <span class="proj-tag tag-soon">Scoped</span>
-              </h3>
-              <p>
-                A multi-tier application migrated onto EC2, RDS, and a load
-                balancer, with Route 53 in front.
-              </p>
-              <div class="proj-stack">EC2 · RDS · ELB · Route 53</div>
-            </div>
-          </div>
-          <div class="proj">
-            <div class="proj-num">04</div>
+            <div class="proj-num">05</div>
             <div class="proj-main">
               <h3>
                 Infrastructure as Code
@@ -1055,7 +1113,7 @@
             </div>
           </div>
           <div class="proj">
-            <div class="proj-num">05</div>
+            <div class="proj-num">06</div>
             <div class="proj-main">
               <h3>
                 GitOps delivery platform
@@ -1087,24 +1145,24 @@
             <div class="st-name">AI-Assisted Tooling</div>
             <div class="st-status"><span class="st-led"></span>Done</div>
           </div>
-          <div class="stage active">
+          <div class="stage done">
             <div class="st-num">03</div>
             <div class="st-name">AWS Cloud</div>
+            <div class="st-status"><span class="st-led"></span>Done</div>
+          </div>
+          <div class="stage active">
+            <div class="st-num">04</div>
+            <div class="st-name">Monitoring</div>
             <div class="st-status"><span class="st-led"></span>Now</div>
           </div>
           <div class="stage todo">
-            <div class="st-num">04</div>
+            <div class="st-num">05</div>
             <div class="st-name">CI/CD &amp; Automation</div>
             <div class="st-status"><span class="st-led"></span>Ahead</div>
           </div>
           <div class="stage todo">
-            <div class="st-num">05</div>
-            <div class="st-name">Infra as Code</div>
-            <div class="st-status"><span class="st-led"></span>Ahead</div>
-          </div>
-          <div class="stage todo">
             <div class="st-num">06</div>
-            <div class="st-name">Monitoring</div>
+            <div class="st-name">Infra as Code</div>
             <div class="st-status"><span class="st-led"></span>Ahead</div>
           </div>
           <div class="stage todo">
@@ -1129,7 +1187,12 @@
           <div class="exp-row">
             <div class="exp-meta">
               <div class="exp-co">
-                <a href="https://ideationplatform.net/" target="_blank" rel="noopener">Ideation Platform</a>
+                <a
+                  href="https://ideationplatform.net/"
+                  target="_blank"
+                  rel="noopener"
+                  >Ideation Platform</a
+                >
               </div>
               <div class="exp-date">Jan 2026 — Present · Lagos</div>
             </div>
@@ -1139,29 +1202,42 @@
               </div>
               <p>
                 I worked as an assistant project lead for the
-                <a class="inline-link" href="https://calgaryblackchambers.ca/" target="_blank" rel="noopener">Calgary Black
-                Chambers</a> website, which is a platform that fosters Black
-                leadership and mentorship, and
-                <a class="inline-link" href="https://lab2doctors.com/" target="_blank" rel="noopener">Lab2Doctors</a>, a site providing
-                specialized medical laboratory training and resources. I
-                coordinated the team to keep our project milestones on track and
-                meet deadlines. My role included rigorous QA testing across
-                admin, member, and guest accounts to catch bugs before release
-                and ensure everything was working exactly as intended across
-                different devices. For these projects, I verified permissions to
-                ensure each user type, whether an admin managing the backend, a
-                member accessing restricted content, or a guest navigating the
-                public interface, only interacted with their intended features.
-                I also managed day-to-day IT support, making sure both sites
-                were stable and staying up and running at all times, maintaining
-                about 99% operational uptime.
+                <a
+                  class="inline-link"
+                  href="https://calgaryblackchambers.ca/"
+                  target="_blank"
+                  rel="noopener"
+                  >Calgary Black Chambers</a
+                >
+                website, which is a platform that fosters Black leadership and
+                mentorship, and
+                <a
+                  class="inline-link"
+                  href="https://lab2doctors.com/"
+                  target="_blank"
+                  rel="noopener"
+                  >Lab2Doctors</a
+                >, a site providing specialized medical laboratory training and
+                resources. I coordinated the team to keep our project milestones
+                on track and meet deadlines. My role included rigorous QA
+                testing across admin, member, and guest accounts to catch bugs
+                before release and ensure everything was working exactly as
+                intended across different devices. For these projects, I
+                verified permissions to ensure each user type, whether an admin
+                managing the backend, a member accessing restricted content, or
+                a guest navigating the public interface, only interacted with
+                their intended features. I also managed day-to-day IT support,
+                making sure both sites were stable and staying up and running at
+                all times, maintaining about 99% operational uptime.
               </p>
             </div>
           </div>
           <div class="exp-row">
             <div class="exp-meta">
               <div class="exp-co">
-                <a href="https://www.ourpass.co/" target="_blank" rel="noopener">OurPass Digital Bank</a>
+                <a href="https://www.ourpass.co/" target="_blank" rel="noopener"
+                  >OurPass Digital Bank</a
+                >
               </div>
               <div class="exp-date">May 2025 — Nov 2025 · NYSC</div>
             </div>
@@ -1194,7 +1270,9 @@
           <div class="exp-row">
             <div class="exp-meta">
               <div class="exp-co">
-                <a href="https://www.tizeti.com/" target="_blank" rel="noopener">Tizeti Network Limited</a>
+                <a href="https://www.tizeti.com/" target="_blank" rel="noopener"
+                  >Tizeti Network Limited</a
+                >
               </div>
               <div class="exp-date">Jul 2022 — Nov 2022 · Lagos</div>
             </div>
@@ -1211,7 +1289,9 @@
           <div class="exp-row">
             <div class="exp-meta">
               <div class="exp-co">
-                <a href="https://www.aladdin.ng/" target="_blank" rel="noopener">Aladdin Digital Bank</a>
+                <a href="https://www.aladdin.ng/" target="_blank" rel="noopener"
+                  >Aladdin Digital Bank</a
+                >
               </div>
               <div class="exp-date">Feb 2022 — Jun 2022 · Lagos</div>
             </div>
@@ -1236,7 +1316,7 @@
           <div class="skill-cat">
             <h4>Cloud &amp; DevOps</h4>
             <ul>
-              <li>AWS (S3, CloudFront, IAM)</li>
+              <li>AWS (EC2, S3, RDS, CloudFront, IAM)</li>
               <li>Linux &amp; Bash scripting</li>
               <li>Git / GitHub Actions CI/CD</li>
               <li>Vagrant, VirtualBox</li>
@@ -1248,17 +1328,17 @@
             <ul>
               <li>VPNs &amp; VLANs</li>
               <li>Routers, switches, firewalls</li>
+              <li>VPC security groups, Route 53</li>
               <li>Wireshark, Nagios</li>
-              <li>Troubleshooting</li>
             </ul>
           </div>
           <div class="skill-cat">
             <h4>Development</h4>
             <ul>
-              <li>Python, JavaScript</li>
+              <li>Python, Flask</li>
+              <li>JavaScript</li>
               <li>HTML, CSS, Tailwind</li>
-              <li>SQL databases</li>
-              <li>Git &amp; VS Code</li>
+              <li>SQL &amp; MySQL databases</li>
             </ul>
           </div>
           <div class="skill-cat">
