@@ -567,112 +567,6 @@
         }
       }
 
-      .journey {
-        background: var(--dark-2);
-        color: var(--paper-text);
-      }
-      .journey .sec-title {
-        color: var(--paper-text);
-      }
-      .track {
-        display: flex;
-        gap: 2px;
-        margin-top: 44px;
-        overflow-x: auto;
-        padding-bottom: 8px;
-      }
-      .stage {
-        flex: 1 0 110px;
-        background: var(--dark);
-        border: 1px solid var(--dark-line);
-        padding: 16px 14px;
-        min-height: 104px;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        position: relative;
-      }
-      .stage:first-child {
-        border-radius: 4px 0 0 4px;
-      }
-      .stage:last-child {
-        border-radius: 0 4px 4px 0;
-      }
-      .stage::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 3px;
-      }
-      .stage.done::before {
-        background: var(--clay);
-      }
-      .stage.active::before {
-        background: var(--clay-light);
-      }
-      .stage.todo::before {
-        background: var(--dark-line);
-      }
-      .stage.active {
-        background: #211d18;
-      }
-      .st-num {
-        font-family: var(--mono);
-        font-size: 11px;
-        color: var(--paper-muted);
-      }
-      .st-name {
-        font-size: 13px;
-        font-weight: 600;
-        margin-top: 8px;
-        line-height: 1.3;
-      }
-      .st-status {
-        font-family: var(--mono);
-        font-size: 10px;
-        text-transform: uppercase;
-        letter-spacing: 0.04em;
-        margin-top: 10px;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-      }
-      .st-led {
-        width: 6px;
-        height: 6px;
-        border-radius: 50%;
-      }
-      .stage.done .st-status {
-        color: var(--clay-light);
-      }
-      .stage.done .st-led {
-        background: var(--clay-light);
-      }
-      .stage.active .st-status {
-        color: var(--clay-light);
-      }
-      .stage.active .st-led {
-        background: var(--clay-light);
-        animation: blink 1.8s ease-in-out infinite;
-      }
-      .stage.todo .st-status {
-        color: var(--paper-muted);
-      }
-      .stage.todo .st-led {
-        background: var(--dark-line);
-      }
-      @keyframes blink {
-        0%,
-        100% {
-          opacity: 1;
-        }
-        50% {
-          opacity: 0.4;
-        }
-      }
-
       .exp {
         background: var(--cream);
       }
@@ -826,9 +720,6 @@
         .photo-slide {
           animation: none;
         }
-        .stage.active .st-led {
-          animation: none;
-        }
         html {
           scroll-behavior: auto;
         }
@@ -844,7 +735,6 @@
             <a href="#about">About</a>
             <a href="#work">Work</a>
             <a href="#experience">Experience</a>
-            <a href="#journey">Journey</a>
             <a href="#contact">Contact</a>
           </div>
           <button
@@ -1132,55 +1022,6 @@
       </div>
     </section>
 
-    <section class="journey section-pad" id="journey">
-      <div class="wrap">
-        <div class="sec-label">The journey</div>
-        <h2 class="sec-title">Where I am in the path.</h2>
-        <div class="track">
-          <div class="stage done">
-            <div class="st-num">01</div>
-            <div class="st-name">Linux &amp; Foundations</div>
-            <div class="st-status"><span class="st-led"></span>Done</div>
-          </div>
-          <div class="stage done">
-            <div class="st-num">02</div>
-            <div class="st-name">AI-Assisted Tooling</div>
-            <div class="st-status"><span class="st-led"></span>Done</div>
-          </div>
-          <div class="stage done">
-            <div class="st-num">03</div>
-            <div class="st-name">AWS Cloud</div>
-            <div class="st-status"><span class="st-led"></span>Done</div>
-          </div>
-          <div class="stage active">
-            <div class="st-num">04</div>
-            <div class="st-name">Monitoring</div>
-            <div class="st-status"><span class="st-led"></span>Now</div>
-          </div>
-          <div class="stage todo">
-            <div class="st-num">05</div>
-            <div class="st-name">CI/CD &amp; Automation</div>
-            <div class="st-status"><span class="st-led"></span>Ahead</div>
-          </div>
-          <div class="stage todo">
-            <div class="st-num">06</div>
-            <div class="st-name">Infra as Code</div>
-            <div class="st-status"><span class="st-led"></span>Ahead</div>
-          </div>
-          <div class="stage todo">
-            <div class="st-num">07</div>
-            <div class="st-name">Containers &amp; K8s</div>
-            <div class="st-status"><span class="st-led"></span>Ahead</div>
-          </div>
-          <div class="stage todo">
-            <div class="st-num">08</div>
-            <div class="st-name">GitOps</div>
-            <div class="st-status"><span class="st-led"></span>Ahead</div>
-          </div>
-        </div>
-      </div>
-    </section>
-
     <section class="exp section-pad" id="experience">
       <div class="wrap">
         <div class="sec-label">Experience</div>
@@ -1435,9 +1276,7 @@
       })();
       (function () {
         const nav = document.getElementById("nav");
-        const darks = document.querySelectorAll(
-          ".dark-band, .journey, .skills",
-        );
+        const darks = document.querySelectorAll(".dark-band, .skills");
         function update() {
           const navY = 40;
           let over = false;
