@@ -4,9 +4,15 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script>
-      if (localStorage.getItem("theme") === "dark") {
-        document.documentElement.setAttribute("data-theme", "dark");
-      }
+      (function () {
+        const saved = localStorage.getItem("theme");
+        const wantsDark = saved
+          ? saved === "dark"
+          : window.matchMedia("(prefers-color-scheme: dark)").matches;
+        if (wantsDark) {
+          document.documentElement.setAttribute("data-theme", "dark");
+        }
+      })();
     </script>
     <title>Agu Richard</title>
     <meta
@@ -1593,6 +1599,19 @@
           }
           sync();
         });
+        if (!localStorage.getItem("theme") && window.matchMedia) {
+          window
+            .matchMedia("(prefers-color-scheme: dark)")
+            .addEventListener("change", (e) => {
+              if (localStorage.getItem("theme")) return;
+              if (e.matches) {
+                root.setAttribute("data-theme", "dark");
+              } else {
+                root.removeAttribute("data-theme");
+              }
+              sync();
+            });
+        }
       })();
     </script>
     <script
