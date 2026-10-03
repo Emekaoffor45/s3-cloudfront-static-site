@@ -850,8 +850,8 @@
         <div class="nav-right">
           <div class="nav-links">
             <a href="#about">About</a>
-            <a href="#work">Work</a>
             <a href="#experience">Experience</a>
+            <a href="#work">Work</a>
             <a href="#contact">Contact</a>
           </div>
           <button
@@ -1006,146 +1006,6 @@
       </div>
     </section>
 
-    <section class="dark-band section-pad" id="work">
-      <div class="wrap">
-        <div class="proj-head">
-          <div>
-            <h2 class="sec-title exp-title">Selected Work</h2>
-          </div>
-        </div>
-        <div class="proj-list">
-          <a
-            class="proj live"
-            href="https://github.com/Emekaoffor45/s3-cloudfront-static-site"
-            target="_blank"
-            rel="noopener"
-          >
-            <div class="proj-num">01</div>
-            <div class="proj-main">
-              <h3>
-                Static site on S3 + CloudFront
-                <span class="proj-tag tag-live">Live</span>
-              </h3>
-              <p>
-                This site. It runs on a private S3 bucket behind CloudFront over
-                HTTPS, and every time I push to GitHub it deploys itself
-                automatically using keyless OIDC, so there are no AWS keys
-                stored anywhere.
-              </p>
-              <div class="proj-stack">
-                S3 · CloudFront (OAC) · IAM OIDC · GitHub Actions
-              </div>
-            </div>
-            <div class="proj-arrow">↗</div>
-          </a>
-          <a
-            class="proj live"
-            href="https://github.com/Emekaoffor45/rds-mysql-server-inventory"
-            target="_blank"
-            rel="noopener"
-          >
-            <div class="proj-num">02</div>
-            <div class="proj-main">
-              <h3>
-                MySQL database on RDS
-                <span class="proj-tag tag-live">Live</span>
-              </h3>
-              <p>
-                A managed MySQL database on Amazon RDS, locked down with an
-                IP-restricted security group and encrypted at rest. I connected
-                from my own machine, built the schema, and documented the
-                security and cost tradeoffs I made along the way.
-              </p>
-              <div class="proj-stack">
-                RDS · MySQL · VPC security groups · KMS
-              </div>
-            </div>
-            <div class="proj-arrow">↗</div>
-          </a>
-          <a
-            class="proj live"
-            href="https://github.com/Emekaoffor45/link-shortener-flask-ec2-rds"
-            target="_blank"
-            rel="noopener"
-          >
-            <div class="proj-num">03</div>
-            <div class="proj-main">
-              <h3>
-                Link shortener (Flask + EC2 + RDS)
-                <span class="proj-tag tag-live">Live</span>
-              </h3>
-              <p>
-                A URL shortener I built from scratch to tie everything together.
-                A Flask app on an EC2 server takes a long URL, generates a short
-                code, stores it in my RDS database, and redirects on visit. My
-                own project, designed and built end to end.
-              </p>
-              <div class="proj-stack">Python · Flask · EC2 · RDS · PyMySQL</div>
-            </div>
-            <div class="proj-arrow">↗</div>
-          </a>
-          <div class="proj">
-            <div class="proj-num">04</div>
-            <div class="proj-main">
-              <h3>
-                Monitoring with CloudWatch
-                <span class="proj-tag tag-soon">Next</span>
-              </h3>
-              <p>
-                Metrics, dashboards, and alarms on my running infrastructure, so
-                I know when something breaks before a user does.
-              </p>
-              <div class="proj-stack">CloudWatch · SNS alerts</div>
-            </div>
-          </div>
-          <div class="proj">
-            <div class="proj-num">05</div>
-            <div class="proj-main">
-              <h3>
-                Infrastructure as Code
-                <span class="proj-tag tag-soon">Scoped</span>
-              </h3>
-              <p>
-                An AWS VPC built entirely in Terraform, using modules and remote
-                state.
-              </p>
-              <div class="proj-stack">Terraform · Modules · Remote state</div>
-            </div>
-          </div>
-          <div class="proj">
-            <div class="proj-num">06</div>
-            <div class="proj-main">
-              <h3>
-                GitOps delivery platform
-                <span class="proj-tag tag-soon">Goal</span>
-              </h3>
-              <p>
-                The target project: GitHub Actions building images, Helm charts,
-                and ArgoCD deploying to Kubernetes from Git.
-              </p>
-              <div class="proj-stack">Docker · Kubernetes · Helm · ArgoCD</div>
-            </div>
-          </div>
-          <div class="proj">
-            <div class="proj-num">07</div>
-            <div class="proj-main">
-              <h3>
-                AG&amp;Co.
-                <span class="proj-tag tag-live">Live</span>
-              </h3>
-              <p>
-                A tech consultancy founded by me and a few classmates,
-                offering web builds, QA and project delivery. We've worked
-                with a good number of clients so far, including PCN and
-                several others.
-              </p>
-              <div class="proj-stack">Consultancy · Web &amp; QA Delivery</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
     <section class="exp section-pad" id="experience">
       <div class="wrap">
         <h2 class="sec-title exp-title">Experience</h2>
@@ -1287,6 +1147,146 @@
                 sorted out complaints, and walked people through ATMs and
                 digital tools.
               </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="dark-band section-pad" id="work">
+      <div class="wrap">
+        <div class="proj-head">
+          <div>
+            <h2 class="sec-title exp-title">Selected Work</h2>
+          </div>
+        </div>
+        <div class="proj-list">
+          <a
+            class="proj live"
+            href="https://github.com/Emekaoffor45/s3-cloudfront-static-site"
+            target="_blank"
+            rel="noopener"
+          >
+            <div class="proj-num">01</div>
+            <div class="proj-main">
+              <h3>
+                Static site on S3 + CloudFront
+                <span class="proj-tag tag-live">Live</span>
+              </h3>
+              <p>
+                This site. It runs on a private S3 bucket behind CloudFront over
+                HTTPS, and every time I push to GitHub it deploys itself
+                automatically using keyless OIDC, so there are no AWS keys
+                stored anywhere.
+              </p>
+              <div class="proj-stack">
+                S3 · CloudFront (OAC) · IAM OIDC · GitHub Actions
+              </div>
+            </div>
+            <div class="proj-arrow">↗</div>
+          </a>
+          <a
+            class="proj live"
+            href="https://github.com/Emekaoffor45/rds-mysql-server-inventory"
+            target="_blank"
+            rel="noopener"
+          >
+            <div class="proj-num">02</div>
+            <div class="proj-main">
+              <h3>
+                MySQL database on RDS
+                <span class="proj-tag tag-live">Live</span>
+              </h3>
+              <p>
+                A managed MySQL database on Amazon RDS, locked down with an
+                IP-restricted security group and encrypted at rest. I connected
+                from my own machine, built the schema, and documented the
+                security and cost tradeoffs I made along the way.
+              </p>
+              <div class="proj-stack">
+                RDS · MySQL · VPC security groups · KMS
+              </div>
+            </div>
+            <div class="proj-arrow">↗</div>
+          </a>
+          <a
+            class="proj live"
+            href="https://github.com/Emekaoffor45/link-shortener-flask-ec2-rds"
+            target="_blank"
+            rel="noopener"
+          >
+            <div class="proj-num">03</div>
+            <div class="proj-main">
+              <h3>
+                Link shortener (Flask + EC2 + RDS)
+                <span class="proj-tag tag-live">Live</span>
+              </h3>
+              <p>
+                A URL shortener I built from scratch to tie everything together.
+                A Flask app on an EC2 server takes a long URL, generates a short
+                code, stores it in my RDS database, and redirects on visit. My
+                own project, designed and built end to end.
+              </p>
+              <div class="proj-stack">Python · Flask · EC2 · RDS · PyMySQL</div>
+            </div>
+            <div class="proj-arrow">↗</div>
+          </a>
+          <div class="proj">
+            <div class="proj-num">04</div>
+            <div class="proj-main">
+              <h3>
+                Monitoring with CloudWatch
+                <span class="proj-tag tag-soon">Next</span>
+              </h3>
+              <p>
+                Metrics, dashboards, and alarms on my running infrastructure, so
+                I know when something breaks before a user does.
+              </p>
+              <div class="proj-stack">CloudWatch · SNS alerts</div>
+            </div>
+          </div>
+          <div class="proj">
+            <div class="proj-num">05</div>
+            <div class="proj-main">
+              <h3>
+                Infrastructure as Code
+                <span class="proj-tag tag-soon">Scoped</span>
+              </h3>
+              <p>
+                An AWS VPC built entirely in Terraform, using modules and remote
+                state.
+              </p>
+              <div class="proj-stack">Terraform · Modules · Remote state</div>
+            </div>
+          </div>
+          <div class="proj">
+            <div class="proj-num">06</div>
+            <div class="proj-main">
+              <h3>
+                GitOps delivery platform
+                <span class="proj-tag tag-soon">Goal</span>
+              </h3>
+              <p>
+                The target project: GitHub Actions building images, Helm charts,
+                and ArgoCD deploying to Kubernetes from Git.
+              </p>
+              <div class="proj-stack">Docker · Kubernetes · Helm · ArgoCD</div>
+            </div>
+          </div>
+          <div class="proj">
+            <div class="proj-num">07</div>
+            <div class="proj-main">
+              <h3>
+                AG&amp;Co.
+                <span class="proj-tag tag-live">Live</span>
+              </h3>
+              <p>
+                A tech consultancy founded by me and a few classmates,
+                offering web builds, QA and project delivery. We've worked
+                with a good number of clients so far, including PCN and
+                several others.
+              </p>
+              <div class="proj-stack">Consultancy · Web &amp; QA Delivery</div>
             </div>
           </div>
         </div>
