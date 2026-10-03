@@ -205,6 +205,93 @@
         align-items: center;
         gap: 22px;
       }
+      .nav-burger {
+        display: none;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 5px;
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        border: none;
+        background: var(--cream);
+        cursor: pointer;
+        flex-shrink: 0;
+        box-shadow:
+          4px 4px 10px var(--clay-lo),
+          -4px -4px 10px var(--clay-hi);
+        transition: box-shadow 0.15s ease;
+      }
+      .nav-burger:active {
+        box-shadow:
+          inset 3px 3px 7px var(--clay-lo),
+          inset -3px -3px 7px var(--clay-hi);
+      }
+      .nav-burger span {
+        display: block;
+        width: 16px;
+        height: 2px;
+        background: var(--ink);
+        border-radius: 2px;
+        transition:
+          transform 0.25s ease,
+          opacity 0.2s ease;
+      }
+      nav.on-dark .nav-burger {
+        background: var(--dark);
+      }
+      nav.on-dark .nav-burger span {
+        background: var(--paper-text);
+      }
+      html[data-theme="dark"] .nav-burger {
+        background: var(--dark);
+      }
+      html[data-theme="dark"] .nav-burger span {
+        background: var(--paper-text);
+      }
+      .nav-burger[aria-expanded="true"] span:nth-child(1) {
+        transform: translateY(7px) rotate(45deg);
+      }
+      .nav-burger[aria-expanded="true"] span:nth-child(2) {
+        opacity: 0;
+      }
+      .nav-burger[aria-expanded="true"] span:nth-child(3) {
+        transform: translateY(-7px) rotate(-45deg);
+      }
+      .nav-mobile {
+        display: none;
+        flex-direction: column;
+        max-height: 0;
+        overflow: hidden;
+        padding: 0 22px;
+        transition:
+          max-height 0.3s ease,
+          padding 0.3s ease;
+      }
+      .nav-mobile a {
+        font-family: var(--display);
+        font-weight: 600;
+        font-size: 15px;
+        padding: 14px 0;
+        border-bottom: 1px solid rgba(28, 31, 38, 0.08);
+      }
+      html[data-theme="dark"] .nav-mobile a,
+      nav.on-dark .nav-mobile a {
+        border-bottom-color: rgba(255, 255, 255, 0.1);
+      }
+      .nav-mobile.open {
+        max-height: 320px;
+        padding: 4px 22px 18px;
+      }
+      @media (max-width: 640px) {
+        .nav-burger {
+          display: flex;
+        }
+        .nav-mobile {
+          display: flex;
+        }
+      }
       .theme-toggle {
         display: inline-flex;
         align-items: center;
@@ -904,7 +991,25 @@
               <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
             </svg>
           </button>
+          <button
+            id="nav-burger"
+            class="nav-burger"
+            type="button"
+            aria-label="Open menu"
+            aria-expanded="false"
+            aria-controls="nav-mobile"
+          >
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
         </div>
+      </div>
+      <div class="nav-mobile" id="nav-mobile">
+        <a href="#about">About</a>
+        <a href="#experience">Experience</a>
+        <a href="#work">Work</a>
+        <a href="#contact">Contact</a>
       </div>
     </nav>
 
@@ -1445,6 +1550,26 @@
         update();
         toTop.addEventListener("click", () => {
           window.scrollTo({ top: 0, behavior: "smooth" });
+        });
+      })();
+      (function () {
+        const burger = document.getElementById("nav-burger");
+        const menu = document.getElementById("nav-mobile");
+        function closeMenu() {
+          burger.setAttribute("aria-expanded", "false");
+          burger.setAttribute("aria-label", "Open menu");
+          menu.classList.remove("open");
+        }
+        burger.addEventListener("click", () => {
+          const isOpen = menu.classList.toggle("open");
+          burger.setAttribute("aria-expanded", isOpen ? "true" : "false");
+          burger.setAttribute("aria-label", isOpen ? "Close menu" : "Open menu");
+        });
+        menu.querySelectorAll("a").forEach((a) => {
+          a.addEventListener("click", closeMenu);
+        });
+        window.addEventListener("resize", () => {
+          if (window.innerWidth > 640) closeMenu();
         });
       })();
       (function () {
