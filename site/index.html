@@ -556,11 +556,11 @@
       }
 
       .dark-band {
-        background: var(--dark);
-        color: var(--paper-text);
+        background: var(--cream);
+        color: var(--ink);
       }
       .dark-band .sec-title {
-        color: var(--paper-text);
+        color: var(--ink);
       }
       .proj-head {
         display: flex;
@@ -571,7 +571,7 @@
         margin-bottom: 48px;
       }
       .proj-head p {
-        color: var(--paper-muted);
+        color: var(--ink-soft);
         max-width: 42ch;
         font-size: 15px;
       }
@@ -587,10 +587,10 @@
         align-items: center;
         padding: 28px 30px;
         border-radius: 22px;
-        background: var(--dark-2);
+        background: var(--cream-2);
         box-shadow:
-          8px 8px 18px var(--clay-lo-dark),
-          -8px -8px 18px var(--clay-hi-dark);
+          8px 8px 18px var(--clay-lo),
+          -8px -8px 18px var(--clay-hi);
         transition:
           padding-left 0.3s ease,
           box-shadow 0.3s ease,
@@ -603,13 +603,13 @@
         padding-left: 36px;
         transform: translateY(-2px);
         box-shadow:
-          10px 10px 22px var(--clay-lo-dark),
-          -10px -10px 22px var(--clay-hi-dark);
+          10px 10px 22px var(--clay-lo),
+          -10px -10px 22px var(--clay-hi);
       }
       .proj-num {
         font-family: var(--mono);
         font-size: 12px;
-        color: var(--paper-muted);
+        color: var(--ink-soft);
       }
       .proj-main h3 {
         font-family: var(--display);
@@ -620,17 +620,17 @@
         gap: 12px;
       }
       .proj.live:hover h3 {
-        color: #ffffff;
+        color: var(--clay);
       }
       .proj-main p {
-        color: var(--paper-muted);
+        color: var(--ink-soft);
         font-size: 14px;
         margin-top: 6px;
       }
       .proj-stack {
         font-family: var(--mono);
         font-size: 11px;
-        color: #6e675e;
+        color: var(--ink-soft);
         letter-spacing: 0.04em;
         margin-top: 8px;
       }
@@ -643,16 +643,16 @@
         border-radius: 2px;
       }
       .tag-live {
-        background: rgba(255, 255, 255, 0.12);
-        color: var(--paper-text);
+        background: rgba(58, 160, 224, 0.15);
+        color: #1c7bb0;
       }
       .tag-soon {
-        background: rgba(255, 255, 255, 0.06);
-        color: var(--paper-muted);
+        background: rgba(28, 31, 38, 0.06);
+        color: var(--ink-soft);
       }
       .proj-arrow {
         font-family: var(--mono);
-        color: var(--paper-muted);
+        color: var(--ink-soft);
         font-size: 16px;
       }
       @media (max-width: 640px) {
@@ -741,11 +741,11 @@
       }
 
       .skills {
-        background: var(--dark);
-        color: var(--paper-text);
+        background: var(--cream);
+        color: var(--ink);
       }
       .skills .sec-title {
-        color: var(--paper-text);
+        color: var(--ink);
       }
       .skill-grid {
         display: grid;
@@ -764,19 +764,19 @@
         }
       }
       .skill-cat {
-        background: var(--dark-2);
+        background: var(--cream-2);
         border-radius: 20px;
         padding: 24px 22px;
         box-shadow:
-          7px 7px 16px var(--clay-lo-dark),
-          -7px -7px 16px var(--clay-hi-dark);
+          7px 7px 16px var(--clay-lo),
+          -7px -7px 16px var(--clay-hi);
       }
       .skill-cat h4 {
         font-family: var(--mono);
         font-size: 11px;
         text-transform: uppercase;
         letter-spacing: 0.1em;
-        color: var(--paper-text);
+        color: var(--ink);
         margin-bottom: 14px;
       }
       .skill-cat ul {
@@ -784,9 +784,9 @@
       }
       .skill-cat li {
         font-size: 15px;
-        color: var(--paper-text);
+        color: var(--ink-soft);
         padding: 5px 0;
-        border-bottom: 1px solid var(--dark-line);
+        border-bottom: 1px solid rgba(28, 31, 38, 0.1);
       }
       .skill-cat li:last-child {
         border-bottom: none;
@@ -1413,22 +1413,6 @@
           slide.style.backgroundImage = "url('" + src + "')";
         };
         img.src = src;
-      })();
-      (function () {
-        const nav = document.getElementById("nav");
-        const darks = document.querySelectorAll(".dark-band, .skills");
-        function update() {
-          const navY = 40;
-          let over = false;
-          darks.forEach((d) => {
-            const r = d.getBoundingClientRect();
-            if (r.top <= navY && r.bottom >= navY) over = true;
-          });
-          nav.classList.toggle("on-dark", over);
-        }
-        window.addEventListener("scroll", update, { passive: true });
-        window.addEventListener("resize", update);
-        update();
       })();
       (function () {
         const bar = document.getElementById("nav-progress");
