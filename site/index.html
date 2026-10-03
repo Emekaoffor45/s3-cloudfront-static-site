@@ -117,6 +117,7 @@
         backdrop-filter: blur(14px);
         -webkit-backdrop-filter: blur(14px);
         border-radius: 26px;
+        overflow: hidden;
         box-shadow:
           8px 8px 20px var(--clay-lo),
           -8px -8px 20px var(--clay-hi);
@@ -131,6 +132,15 @@
           8px 8px 20px var(--clay-lo-dark),
           -8px -8px 20px var(--clay-hi-dark);
         color: var(--paper-text);
+      }
+      .nav-progress {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        height: 2.5px;
+        width: 0%;
+        background: var(--clay);
+        transition: width 0.1s linear;
       }
       .nav-inner {
         max-width: 1200px;
@@ -232,6 +242,60 @@
       }
       html[data-theme="dark"] .theme-toggle .icon-moon {
         display: block;
+      }
+
+      .back-to-top {
+        position: fixed;
+        right: 26px;
+        bottom: 26px;
+        z-index: 90;
+        width: 46px;
+        height: 46px;
+        border-radius: 50%;
+        border: none;
+        background: var(--cream);
+        color: var(--ink);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(12px);
+        box-shadow:
+          6px 6px 14px var(--clay-lo),
+          -6px -6px 14px var(--clay-hi);
+        transition:
+          opacity 0.25s ease,
+          visibility 0.25s ease,
+          transform 0.25s ease,
+          box-shadow 0.15s ease,
+          color 0.2s ease;
+      }
+      .back-to-top.show {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+      .back-to-top:hover {
+        color: var(--clay);
+        transform: translateY(-2px);
+      }
+      .back-to-top:active {
+        transform: scale(0.94);
+        box-shadow:
+          inset 3px 3px 8px var(--clay-lo),
+          inset -3px -3px 8px var(--clay-hi);
+      }
+      .back-to-top svg {
+        width: 18px;
+        height: 18px;
+      }
+      @media (max-width: 640px) {
+        .back-to-top {
+          right: 18px;
+          bottom: 18px;
+        }
       }
 
       .hero {
@@ -794,6 +858,7 @@
   </head>
   <body>
     <nav id="nav">
+      <div class="nav-progress" id="nav-progress"></div>
       <div class="nav-inner">
         <div class="logo">Agu <b>Richard</b></div>
         <div class="nav-right">
@@ -1315,6 +1380,24 @@
       </div>
     </section>
 
+    <button
+      id="back-to-top"
+      class="back-to-top"
+      type="button"
+      aria-label="Back to top"
+    >
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M12 19V5M5 12l7-7 7 7"></path>
+      </svg>
+    </button>
+
     <footer>
       <div class="wrap foot-inner">
         <span>© 2026 Agu Richard · Birmingham, UK</span>
@@ -1356,6 +1439,23 @@
         window.addEventListener("scroll", update, { passive: true });
         window.addEventListener("resize", update);
         update();
+      })();
+      (function () {
+        const bar = document.getElementById("nav-progress");
+        const toTop = document.getElementById("back-to-top");
+        function update() {
+          const doc = document.documentElement;
+          const scrollable = doc.scrollHeight - doc.clientHeight;
+          const pct = scrollable > 0 ? (doc.scrollTop / scrollable) * 100 : 0;
+          bar.style.width = pct + "%";
+          toTop.classList.toggle("show", doc.scrollTop > 600);
+        }
+        window.addEventListener("scroll", update, { passive: true });
+        window.addEventListener("resize", update);
+        update();
+        toTop.addEventListener("click", () => {
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        });
       })();
       (function () {
         const root = document.documentElement;
