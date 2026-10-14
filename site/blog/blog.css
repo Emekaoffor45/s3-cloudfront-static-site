@@ -253,3 +253,6 @@ footer a {
 footer a:hover {
   color: var(--ink);
 }
+article h1 + p {
+  margin-top: 22px;
+}
