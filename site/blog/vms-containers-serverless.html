@@ -8,12 +8,12 @@
         document.documentElement.setAttribute("data-theme", "dark");
       }
     </script>
-    <title>What I'm actually running, after a lecture on VMs and serverless · Agu Richard</title>
+    <title>Two workloads in my AWS account: EC2 versus S3 and CloudFront · Agu Richard</title>
     <meta
       name="description"
-      content="After a week 2 MSc lecture on VMs, containers and serverless, I checked what I run on AWS: one VM, one site with no server of mine, and an alarm I forgot to delete."
+      content="Comparing a Flask app on EC2 and RDS with a static site on S3 and CloudFront deployed by GitHub Actions over OIDC, plus an orphaned CloudWatch alarm."
     />
-    <meta property="og:title" content="What I'm actually running, after a lecture on VMs and serverless" />
+    <meta property="og:title" content="Two workloads in my AWS account: EC2 versus S3 and CloudFront" />
     <meta property="og:image" content="https://agurichard.com/photo1.jpg" />
     <meta property="og:url" content="https://agurichard.com/blog/vms-containers-serverless.html" />
     <meta property="og:type" content="article" />
@@ -39,57 +39,84 @@
 
     <main class="wrap">
       <article>
-        <span class="entry-date">14 Oct 2026 · MSc week 2</span>
-        <h1>What I'm actually running, after a lecture on VMs and serverless</h1>
+        <span class="entry-date">14 Oct 2026</span>
+        <h1>Two workloads in my AWS account: EC2 versus S3 and CloudFront</h1>
 
         <p>
-          Week 2 of my Scalable Advanced Software Solutions module (COM769,
-          part of my MSc at Ulster in Birmingham) was about where your code
-          runs: on a virtual machine, in a container or as a serverless
-          function. The slides use Azure. My own projects are on AWS, but the
-          ideas are the same.
+          I run two things on AWS at the moment. They sit at opposite ends of
+          how much infrastructure you have to manage yourself.
+        </p>
+
+        <h2>The link shortener on EC2</h2>
+        <p>
+          A Flask app on a single EC2 instance. It takes a long URL, generates
+          a short code, stores the mapping in MySQL on RDS and redirects when
+          someone requests the short link.
         </p>
         <p>
-          The bit I wrote down was about billing. With normal hosting you pay
-          for a block of time, so a website that gets one visit a day still
-          costs you the full day. With serverless you pay for the time your
-          code runs and nothing when it isn't running. If a function runs once
-          a day for two minutes, that's what you get billed for.
-        </p>
-        <p>After the lecture I logged into AWS to see which of these I'm using.</p>
-        <p>
-          My link shortener is on a VM. It's a small Flask app on an EC2
-          instance, with the short codes stored in MySQL on RDS. Because it's a
-          VM, the operating system is mine to look after. I patch it, and if
-          the app stops in the middle of the night it stays stopped until I
-          notice. It also costs me the same on a day when nobody clicks a link
-          as on a busy one, which is the one-visit problem from the slide. And
-          if it ever needed to handle a lot more traffic, I'd have to add more
-          instances and put a load balancer in front of them.
+          On EC2 I'm responsible for everything from the operating system up.
+          That means OS patches and keeping the Flask process alive. Unless I
+          add a process manager or health checks, a crash means downtime until
+          I notice. The instance is billed for as long as it's running, so it
+          costs the same with zero requests as with ten thousand.
         </p>
         <p>
-          My portfolio site works differently. It's HTML files in a private S3
-          bucket with CloudFront in front, and when I push to GitHub a workflow
-          copies the files up and clears the cache. There's no machine of mine
-          anywhere in that. The lecture probably wouldn't call it serverless,
-          because none of my code runs anywhere, but the billing follows the
-          same idea and a quiet day costs close to nothing.
+          Scaling it out would need an Auto Scaling group with a load balancer
+          in front. The app itself is in reasonable shape for that, because it
+          keeps no state of its own. Every short code lives in RDS, so any
+          instance could serve any request. The database would become the
+          limit long before the web tier did.
+        </p>
+
+        <h2>The portfolio on S3 and CloudFront</h2>
+        <p>
+          This site is static HTML in a private S3 bucket. CloudFront serves it
+          over HTTPS on agurichard.com with an ACM certificate, and reads from
+          the bucket through origin access control, so the bucket itself is
+          never public.
         </p>
         <p>
-          While I was in the console I found something I'd forgotten about. A
-          CloudWatch alarm called <code>webserver</code> was still checking CPU
-          usage for an Auto Scaling group I had deleted after an earlier
-          exercise. I'd assumed that removing the servers removed everything
-          attached to them. It didn't, and the alarm is now on my list to clear
-          out when I finish the monitoring setup for the portfolio.
+          Deployment is a GitHub Actions workflow that runs on every push to
+          main. The job assumes an IAM role through GitHub's OIDC provider, so
+          there are no AWS access keys stored as repository secrets. The two
+          commands that do the work:
+        </p>
+<pre><code>aws s3 sync ./site s3://&lt;bucket&gt; --delete
+
+aws cloudfront create-invalidation \
+  --distribution-id &lt;distribution-id&gt; \
+  --paths "/*"</code></pre>
+        <p>
+          <code>--delete</code> removes anything from the bucket that's no
+          longer in the repo, which matters when pages get renamed or moved.
+          The invalidation clears CloudFront's cached copies so changes show up
+          straight away. Invalidating <code>/*</code> on every deploy is the
+          blunt option, but a wildcard counts as a single path and AWS gives
+          you the first 1,000 invalidation paths each month free, so for a
+          site this size it costs nothing.
         </p>
         <p>
-          Containers are the one I haven't used yet. From the slides, a
-          container doesn't come with an operating system for you to manage,
-          and containers are meant to be started and stopped quickly as demand
-          goes up and down, which is what you want for something that has to
-          scale. My plan is to put the link shortener in Docker, get it running
-          on my laptop, and then work out where to run it on AWS.
+          There's no server to patch, and cost follows requests and storage
+          instead of uptime.
+        </p>
+
+        <h2>An orphaned alarm</h2>
+        <p>
+          While setting up CloudWatch monitoring for the portfolio, I found an
+          alarm called <code>webserver</code> still tracking CPU for an Auto
+          Scaling group I had deleted after an earlier exercise. Deleting the
+          group didn't delete the alarm, because I'd created it separately.
+          It costs very little, but it's noise in the console and would be
+          noise in any alerting built on top of it. It's on the clean-up list.
+        </p>
+
+        <h2>Next: containerising the shortener</h2>
+        <p>
+          The plan is a Docker image for the Flask app, with the database
+          settings passed in as environment variables instead of living on the
+          instance. I'll run it locally against RDS first, then decide between
+          ECS on Fargate and App Runner for hosting it, which would take OS
+          patching off my list entirely.
         </p>
 
         <a class="back" href="/blog/index.html">← All posts</a>
