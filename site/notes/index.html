@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+      if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+        document.documentElement.setAttribute("data-theme", "dark");
+      }
+    </script>
+    <title>Build log · Agu Richard</title>
+    <meta
+      name="description"
+      content="Write-ups of things Agu Richard has built or broken on AWS, mostly tied to his MSc at Ulster University."
+    />
+    <meta property="og:title" content="Build log · Agu Richard" />
+    <meta property="og:image" content="https://agurichard.com/photo1.jpg" />
+    <meta property="og:url" content="https://agurichard.com/notes/index.html" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,500;0,600;0,700;1,500;1,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="notes.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="wrap">
+        <a class="name" href="/">Agu Richard Chiwetalu</a>
+        <nav>
+          <a href="/#work">Work</a>
+          <a href="/notes/index.html">Build log</a>
+          <a href="/#contact">Contact</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="wrap">
+      <div class="page-head">
+        <h1>Build log</h1>
+        <p>
+          Longer write-ups of things I've built or broken on AWS. Most of them
+          start with something from my MSc at Ulster and end up in my own
+          account.
+        </p>
+      </div>
+
+      <div class="entries">
+        <!-- Newest first. Copy this <a> block for each new write-up. -->
+        <a class="entry" href="/notes/vms-containers-serverless.html">
+          <span class="entry-date">14 Oct 2026 · MSc week 2</span>
+          <h2>A lecture on VMs, containers and serverless, and what I found in my own AWS account</h2>
+          <p>
+            My URL shortener runs on a VM, this site has no server at all, and
+            there was a CloudWatch alarm still watching servers I'd deleted.
+          </p>
+          <div class="entry-tags">EC2 · S3 · CloudFront · CloudWatch</div>
+        </a>
+      </div>
+    </main>
+
+    <footer>
+      <div class="wrap">
+        <span>© 2026</span>
+        <a href="https://www.linkedin.com/in/richard-agu-6328b7361" target="_blank" rel="noopener">LinkedIn →</a>
+      </div>
+    </footer>
+
+    <script>
+      window
+        .matchMedia("(prefers-color-scheme: dark)")
+        .addEventListener("change", (e) => {
+          if (e.matches) document.documentElement.setAttribute("data-theme", "dark");
+          else document.documentElement.removeAttribute("data-theme");
+        });
+    </script>
+    <script
+      data-goatcounter="https://agurichard.goatcounter.com/count"
+      async
+      src="//gc.zgo.at/count.js"
+    ></script>
+  </body>
+</html>
