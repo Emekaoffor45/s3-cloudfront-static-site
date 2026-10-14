@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+      if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+        document.documentElement.setAttribute("data-theme", "dark");
+      }
+    </script>
+    <title>VMs, containers, serverless and my own AWS account · Agu Richard</title>
+    <meta
+      name="description"
+      content="After a week 2 MSc lecture on VMs, containers and serverless, I went through what I actually run on AWS. One VM, one site with no server, and an alarm watching servers that no longer exist."
+    />
+    <meta property="og:title" content="A lecture on VMs, containers and serverless, and what I found in my own AWS account" />
+    <meta property="og:image" content="https://agurichard.com/photo1.jpg" />
+    <meta property="og:url" content="https://agurichard.com/notes/vms-containers-serverless.html" />
+    <meta property="og:type" content="article" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,500;0,600;0,700;1,500;1,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="notes.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="wrap">
+        <a class="name" href="/">Agu Richard Chiwetalu</a>
+        <nav>
+          <a href="/#work">Work</a>
+          <a href="/notes/index.html">Build log</a>
+          <a href="/#contact">Contact</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="wrap">
+      <article>
+        <span class="entry-date">14 Oct 2026 · MSc week 2</span>
+        <h1>A lecture on VMs, containers and serverless, and what I found in my own AWS account</h1>
+        <p class="lede">
+          Week 2 of my cloud module was about where code actually runs. I went
+          home and checked where mine runs.
+        </p>
+
+        <p>
+          I'm doing an MSc in Computer Science and Technology with Business
+          Development at Ulster University in Birmingham. One of the modules is
+          COM769, Scalable Advanced Software Solutions. The week 2 lecture
+          covered virtual machines, containers and serverless. The examples are
+          all Azure, but the ideas carry straight over to AWS, which is where my
+          own projects live.
+        </p>
+        <p>
+          One slide stayed with me. It said traditional hosting bills you for a
+          block of time, so even if your website gets one visitor a day, you
+          still pay for the whole day. Serverless only bills for the time your
+          code is actually running.
+        </p>
+        <p>So I went through what I have running and what it costs me to keep it there.</p>
+
+        <h2>The URL shortener is a VM</h2>
+        <p>
+          My <a href="https://github.com/Emekaoffor45/link-shortener-flask-ec2-rds" target="_blank" rel="noopener">link shortener</a>
+          is a Flask app on an EC2 instance. It takes a long URL, makes a short
+          code, saves it in a MySQL database on RDS, and redirects when someone
+          visits the short link.
+        </p>
+        <p>
+          EC2 is a VM. The lecture describes VMs as the option for when you need
+          full control of the operating system, and that control is real, but
+          so is the work that comes with it. I'm the one who patches the
+          instance. If the Flask process dies, nobody restarts it except me.
+          And the instance costs the same whether a hundred people use the
+          shortener in a day or nobody does, which is exactly the "one hit a
+          day" problem from the slide.
+        </p>
+        <p>
+          While I was looking, I also noticed my RDS security group lets my own
+          IP address in, because I wanted to run queries from my laptop. The
+          week 3 lecture on N-tier architecture says the database should only
+          accept connections from the tier above it. Mine accepts connections
+          from my house too. That's going on the fix list.
+        </p>
+
+        <h2>This site has no server at all</h2>
+        <p>
+          The site you're reading is a set of static files in a private S3
+          bucket, with CloudFront in front of it. There's no instance, so
+          there's nothing to patch and nothing to restart. Every push to the
+          main branch runs a GitHub Actions workflow that signs in to AWS with
+          OIDC (so no access keys are stored in GitHub), syncs the files to the
+          bucket and clears the CloudFront cache. The two commands that do the
+          actual work:
+        </p>
+<pre><code>aws s3 sync ./site s3://devops-journey-site --delete
+
+aws cloudfront create-invalidation \
+  --distribution-id E485VDAP1XU8G \
+  --paths "/*"</code></pre>
+        <p>
+          Strictly speaking, this isn't serverless in the sense the lecture
+          means, because none of my code runs on the server side. But it
+          follows the same idea. I don't reserve a server, and what I pay
+          depends on how much the site actually gets used.
+        </p>
+
+        <h2>The alarm I forgot about</h2>
+        <p>
+          Recently I started setting up CloudWatch monitoring for this
+          site. The first thing I found wasn't anything to do with the site. It
+          was a CPU alarm called <code>webserver</code>, set up for an Auto
+          Scaling group of web servers from an earlier exercise. I had deleted
+          that group a while before. The servers were gone, but the alarm was
+          still there, watching CPU on machines that didn't exist.
+        </p>
+        <p>
+          Deleting the Auto Scaling group didn't delete the alarm I'd made for
+          it. It's a small thing and it wasn't costing me much, but it's the
+          sort of leftover that piles up in a real account if nobody's
+          checking.
+        </p>
+
+        <h2>Containers are next</h2>
+        <p>
+          Containers are the one of the three I haven't used yet. The lecture's
+          point is that you don't manage an operating system for a container,
+          and they're built to be started, stopped and scaled out quickly in a
+          way VMs aren't. Docker is the usual engine.
+        </p>
+        <p>
+          So the plan is to put the URL shortener in a Docker container, get it
+          running locally first, and then work out where to run it on AWS. I'll
+          write that up here when it's done, including whatever goes wrong.
+        </p>
+
+        <a class="back" href="/notes/index.html">← All write-ups</a>
+      </article>
+    </main>
+
+    <footer>
+      <div class="wrap">
+        <span>© 2026</span>
+        <a href="https://www.linkedin.com/in/richard-agu-6328b7361" target="_blank" rel="noopener">LinkedIn →</a>
+      </div>
+    </footer>
+
+    <script>
+      window
+        .matchMedia("(prefers-color-scheme: dark)")
+        .addEventListener("change", (e) => {
+          if (e.matches) document.documentElement.setAttribute("data-theme", "dark");
+          else document.documentElement.removeAttribute("data-theme");
+        });
+    </script>
+    <script
+      data-goatcounter="https://agurichard.goatcounter.com/count"
+      async
+      src="//gc.zgo.at/count.js"
+    ></script>
+  </body>
+</html>
