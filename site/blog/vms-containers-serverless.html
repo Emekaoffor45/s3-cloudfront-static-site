@@ -8,12 +8,12 @@
         document.documentElement.setAttribute("data-theme", "dark");
       }
     </script>
-    <title>Two workloads in my AWS account: EC2 versus S3 and CloudFront · Agu Richard</title>
+    <title>Two workloads on AWS: IaaS versus managed services · Agu Richard</title>
     <meta
       name="description"
-      content="Comparing a Flask app on EC2 and RDS with a static site on S3 and CloudFront deployed by GitHub Actions over OIDC, plus an orphaned CloudWatch alarm."
+      content="A Flask app on EC2 and RDS next to a static site on S3 and CloudFront: who manages what, how each is billed, and why the next step is a container."
     />
-    <meta property="og:title" content="Two workloads in my AWS account: EC2 versus S3 and CloudFront" />
+    <meta property="og:title" content="Two workloads on AWS: IaaS versus managed services" />
     <meta property="og:image" content="https://agurichard.com/photo1.jpg" />
     <meta property="og:url" content="https://agurichard.com/blog/vms-containers-serverless.html" />
     <meta property="og:type" content="article" />
@@ -40,46 +40,62 @@
     <main class="wrap">
       <article>
         <span class="entry-date">14 Oct 2026</span>
-        <h1>Two workloads in my AWS account: EC2 versus S3 and CloudFront</h1>
+        <h1>Two workloads on AWS: IaaS versus managed services</h1>
 
         <p>
-          I run two things on AWS at the moment. They sit at opposite ends of
-          how much infrastructure you have to manage yourself.
+          I run two things on AWS. One is plain IaaS and the other is built
+          from managed services. They differ in who does the work and in how
+          the bill is worked out.
         </p>
 
-        <h2>The link shortener on EC2</h2>
+        <h2>The link shortener: IaaS on EC2</h2>
         <p>
           A Flask app on a single EC2 instance. It takes a long URL, generates
           a short code, stores the mapping in MySQL on RDS and redirects when
           someone requests the short link.
         </p>
         <p>
-          On EC2 I'm responsible for everything from the operating system up.
-          That means OS patches and keeping the Flask process alive. Unless I
-          add a process manager or health checks, a crash means downtime until
-          I notice. The instance is billed for as long as it's running, so it
-          costs the same with zero requests as with ten thousand.
+          This is IaaS in the textbook sense. AWS rents me an instance with a
+          set amount of CPU, memory, disk and network, and everything I put on
+          it is my job. Under AWS's shared responsibility model they look after
+          the hardware, the network and the hypervisor. I look after the
+          operating system, its patches, the Python runtime and keeping the
+          Flask process up. Unless I add a process manager or health checks, a
+          crash means downtime until I notice. The database is the exception:
+          RDS is managed, so AWS runs the database server and I only deal with
+          the schema and the data.
         </p>
         <p>
-          Scaling it out would need an Auto Scaling group with a load balancer
-          in front. The app itself is in reasonable shape for that, because it
-          keeps no state of its own. Every short code lives in RDS, so any
-          instance could serve any request. The database would become the
-          limit long before the web tier did.
+          IaaS is normally priced per instance for the time it runs, and
+          providers either bill partial hours as full hours (non-prorated) or
+          charge only for the part used (prorated). EC2 bills Linux instances
+          per second with a 60-second minimum, so short-lived instances aren't
+          rounded up to an hour. That matters for burst work where you start a
+          lot of instances for a few minutes. For something like the shortener
+          that runs all the time, it doesn't help much. An idle instance costs
+          the same as a busy one.
+        </p>
+        <p>
+          Scaling out would need an Auto Scaling group with a load balancer in
+          front. The app is in reasonable shape for that because it keeps no
+          state of its own. Every short code lives in RDS, so any instance
+          could serve any request, and the database would hit its limit before
+          the web tier did.
         </p>
 
-        <h2>The portfolio on S3 and CloudFront</h2>
+        <h2>The portfolio: managed services</h2>
         <p>
           This site is static HTML in a private S3 bucket. CloudFront serves it
           over HTTPS on agurichard.com with an ACM certificate, and reads from
-          the bucket through origin access control, so the bucket itself is
-          never public.
+          the bucket through origin access control, so the bucket is never
+          public. There's no operating system anywhere in this that I'm
+          responsible for.
         </p>
         <p>
           Deployment is a GitHub Actions workflow that runs on every push to
           main. The job assumes an IAM role through GitHub's OIDC provider, so
-          there are no AWS access keys stored as repository secrets. The two
-          commands that do the work:
+          no AWS access keys are stored as repository secrets. The two commands
+          that do the work:
         </p>
 <pre><code>aws s3 sync ./site s3://&lt;bucket&gt; --delete
 
@@ -90,33 +106,31 @@ aws cloudfront create-invalidation \
           <code>--delete</code> removes anything from the bucket that's no
           longer in the repo, which matters when pages get renamed or moved.
           The invalidation clears CloudFront's cached copies so changes show up
-          straight away. Invalidating <code>/*</code> on every deploy is the
-          blunt option, but a wildcard counts as a single path and AWS gives
-          you the first 1,000 invalidation paths each month free, so for a
-          site this size it costs nothing.
+          straight away. A wildcard path counts as one invalidation path, and
+          the first 1,000 paths each month are free, so invalidating
+          <code>/*</code> on every deploy costs nothing at this size.
         </p>
         <p>
-          There's no server to patch, and cost follows requests and storage
-          instead of uptime.
-        </p>
-
-        <h2>An orphaned alarm</h2>
-        <p>
-          While setting up CloudWatch monitoring for the portfolio, I found an
-          alarm called <code>webserver</code> still tracking CPU for an Auto
-          Scaling group I had deleted after an earlier exercise. Deleting the
-          group didn't delete the alarm, because I'd created it separately.
-          It costs very little, but it's noise in the console and would be
-          noise in any alerting built on top of it. It's on the clean-up list.
+          The billing is usage-based all the way through. S3 charges per
+          gigabyte stored and per request, and CloudFront charges for data
+          transferred and requests served. A quiet month costs almost nothing.
         </p>
 
-        <h2>Next: containerising the shortener</h2>
+        <h2>Moving the shortener towards PaaS</h2>
         <p>
-          The plan is a Docker image for the Flask app, with the database
-          settings passed in as environment variables instead of living on the
-          instance. I'll run it locally against RDS first, then decide between
-          ECS on Fargate and App Runner for hosting it, which would take OS
-          patching off my list entirely.
+          The next step is to get the shortener off a hand-managed VM and onto
+          something closer to PaaS, where the provider runs the platform and I
+          only ship the app. PaaS is usually priced by usage, which suits a
+          small app with uneven traffic.
+        </p>
+        <p>
+          The usual downside of PaaS is lock-in. If the app is written against
+          one provider's own APIs, moving it later means rewriting parts of it.
+          Packaging it as a Docker image first is my way round that. The same
+          image can run on ECS with Fargate, on App Runner, or on another
+          provider's container service, and the database settings will come in
+          as environment variables instead of living on the instance. I'll get
+          it running locally against RDS before choosing where to host it.
         </p>
 
         <a class="back" href="/blog/index.html">← All posts</a>
